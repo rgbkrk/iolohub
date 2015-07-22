@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Chat Example</title>
+<title>#IOLO</title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <link rel="import" href="node_modules/jupyter-display-area/dist/jupyter-display-area.html">
 <script type="text/javascript">
     function display(message){
         var container = document.getElementById('container');
-        if (! message.parentHeader && ! message.parentHeader.msg_id) {
+        if (! message.parent_header && ! message.parent_header.msg_id) {
+            console.log("Rejected a message: ");
+            console.dir(message);
             return;
         }
 
         // The element we'll send the jupyter message
         var node;
-        var parentID = 'parentID-' + message.parentHeader.msg_id;
+        var parentID = 'parentID-' + message.parent_header.msg_id;
         node = document.querySelector('#' + parentID);
 
         if (!node) {
@@ -38,21 +40,23 @@
         conn.onclose = function(evt) {
             // #IOLO
             console.log("Disconnected #IOLO")
-            // TODO: reconnect? Inform?
+            // TODO: Exponential backoff
             setTimeout(function(){
                 conn = new WebSocket("ws://{{$}}/ws");
             }, 10*1000);
         }
         conn.onmessage = function(evt) {
             try {
-                message = JSON.parse(evt.data)
-                display(message)
-            } catch {
+                message = JSON.parse(evt.data);
+                display(message);
+            } catch(err) {
                 // #IOLO
+                console.log(err);
             }
         }
     } else {
         // Browser doesn't support websockets
+        console.log("Browser doesn't support websockets. :(")
     }
     });
 </script>
