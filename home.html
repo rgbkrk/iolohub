@@ -5,46 +5,54 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <link rel="import" href="node_modules/jupyter-display-area/dist/jupyter-display-area.html">
 <script type="text/javascript">
-    $(function() {
+    function display(message){
+        var container = document.getElementById('container');
+        if (! message.parentHeader && ! message.parentHeader.msg_id) {
+            return;
+        }
 
-    var conn;
-    var msg = $("#msg");
-    var log = $("#log");
+        // The element we'll send the jupyter message
+        var node;
+        var parentID = 'parentID-' + message.parentHeader.msg_id;
+        node = document.querySelector('#' + parentID);
 
-    function appendLog(msg) {
-        var d = log[0]
-        var doScroll = d.scrollTop == d.scrollHeight - d.clientHeight;
+        if (!node) {
+            // For every new parentID append a new jupyter-display-area
+            node = document.createElement('jupyter-display-area');
+            node.id = parentID;
+        }
 
-
-
-        msg.appendTo(log)
-        if (doScroll) {
-            d.scrollTop = d.scrollHeight - d.clientHeight;
+        if(node.handle(message)) {
+            container.appendChild(node);
+            node.scrollIntoView();
         }
     }
 
-    $("#form").submit(function() {
-        if (!conn) {
-            return false;
-        }
-        if (!msg.val()) {
-            return false;
-        }
-        conn.send(msg.val());
-        msg.val("");
-        return false
-    });
+
+    $(function() {
+
+    var conn;
 
     if (window["WebSocket"]) {
         conn = new WebSocket("ws://{{$}}/ws");
         conn.onclose = function(evt) {
-            appendLog($("<div><b>Connection closed.</b></div>"))
+            // #IOLO
+            console.log("Disconnected #IOLO")
+            // TODO: reconnect? Inform?
+            setTimeout(function(){
+                conn = new WebSocket("ws://{{$}}/ws");
+            }, 10*1000);
         }
         conn.onmessage = function(evt) {
-            appendLog($("<div/>").text(evt.data))
+            try {
+                message = JSON.parse(evt.data)
+                display(message)
+            } catch {
+                // #IOLO
+            }
         }
     } else {
-        appendLog($("<div><b>Your browser does not support WebSockets.</b></div>"))
+        // Browser doesn't support websockets
     }
     });
 </script>
@@ -62,7 +70,7 @@ body {
     background: gray;
 }
 
-#log {
+#container {
     background: white;
     margin: 0;
     padding: 0.5em 0.5em 0.5em 0.5em;
@@ -74,23 +82,9 @@ body {
     overflow: auto;
 }
 
-#form {
-    padding: 0 0.5em 0 0.5em;
-    margin: 0;
-    position: absolute;
-    bottom: 1em;
-    left: 0px;
-    width: 100%;
-    overflow: hidden;
-}
-
 </style>
 </head>
 <body>
-<div id="log"></div>
-<form id="form">
-    <input type="submit" value="Send" />
-    <input type="text" id="msg" size="64"/>
-</form>
+<div id="container"></div>
 </body>
 </html>
