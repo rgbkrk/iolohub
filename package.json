@@ -1,0 +1,26 @@
+{
+  "name": "@rgbkrk/iolosub",
+  "version": "0.0.1",
+  "description": "IOLO Sub for IOLO Pub",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rgbkrk/iolohub.git"
+  },
+  "keywords": [
+    "jupyter",
+    "iolo",
+    "yolo"
+  ],
+  "author": "Kyle Kelley",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/rgbkrk/iolohub/issues"
+  },
+  "homepage": "https://github.com/rgbkrk/iolohub#readme",
+  "dependencies": {
+    "jupyter-display-area": "0.0.5",
+    "transformime": "0.0.4"
+  }
+}

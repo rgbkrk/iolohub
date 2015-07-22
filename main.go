@@ -29,9 +29,20 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	flag.Parse()
+
 	go h.run()
 	http.HandleFunc("/", serveHome)
 	http.HandleFunc("/ws", serveWs)
+
+	fs := http.FileServer(http.Dir("node_modules"))
+	http.Handle("/node_modules/", http.StripPrefix("/node_modules/", fs))
+
+	if *addr == ":8080" {
+		log.Printf("Serving on 127.0.0.1:8080\n")
+	} else {
+		log.Printf("Serving on %v\n", *addr)
+	}
+
 	err := http.ListenAndServe(*addr, nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)

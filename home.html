@@ -3,6 +3,7 @@
 <head>
 <title>Chat Example</title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<link rel="import" href="node_modules/jupyter-display-area/dist/jupyter-display-area.html">
 <script type="text/javascript">
     $(function() {
 
@@ -13,6 +14,9 @@
     function appendLog(msg) {
         var d = log[0]
         var doScroll = d.scrollTop == d.scrollHeight - d.clientHeight;
+
+
+
         msg.appendTo(log)
         if (doScroll) {
             d.scrollTop = d.scrollHeight - d.clientHeight;
