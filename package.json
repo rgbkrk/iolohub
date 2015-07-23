@@ -1,5 +1,5 @@
 {
-  "name": "@rgbkrk/iolosub",
+  "name": "iolosub",
   "version": "0.0.1",
   "description": "IOLO Sub for IOLO Pub",
   "main": "index.js",
