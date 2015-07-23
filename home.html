@@ -46,6 +46,10 @@
             }, 10*1000);
         }
         conn.onmessage = function(evt) {
+            if(!evt.data || evt.data === ''){
+                return;
+            }
+            
             try {
                 message = JSON.parse(evt.data);
                 display(message);
