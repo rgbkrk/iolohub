@@ -21,6 +21,7 @@
   "homepage": "https://github.com/rgbkrk/iolohub#readme",
   "dependencies": {
     "jupyter-display-area": "0.0.5",
+    "jupyter-js-output-area": "0.0.5",
     "transformime": "0.0.4"
   }
 }
